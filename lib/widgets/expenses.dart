@@ -25,14 +25,35 @@ class _ExpensesState extends State<Expenses> {
     ),
   ];
 
+  // appBar 메뉴 버튼
+  void _openAddExpenseOverlay() {
+    // State 상속받으면 context를 사용할 수 있다.
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => Text(ctx.toString()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Text('The Charts'),
-          Expanded(child: ExpensesList(expenses: _registeredExpenses))
+      appBar: AppBar(
+        title: const Text('Flutter Expense Tracker'),
+        // toolBar의 사용되는 버튼들을 지정하는데 보통 사용한다
+        actions: [
+          IconButton(
+            onPressed: _openAddExpenseOverlay,
+            icon: const Icon(Icons.add),
+          ),
         ],
+      ),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Text('The Charts'),
+            Expanded(child: ExpensesList(expenses: _registeredExpenses)),
+          ],
+        ),
       ),
     );
   }
