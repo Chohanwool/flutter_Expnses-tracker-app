@@ -33,6 +33,42 @@ class _NewExpenseState extends State<NewExpense> {
     }
   }
 
+  void _summitExpenseDate() {
+    final enteredAmount = double.tryParse(
+      _amountController.text,
+    ); // double 로 변환되지 않을 경우, null
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _pickedDate == null ||
+        _selectedCategory == null) {
+      // show a error message
+      showDialog(
+        context: context,
+        builder:
+            (ctx) => AlertDialog(
+              title: const Text('잘못된 입력값 입니다.'),
+              content: const Text('Please make make sure valid values'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // showDialog 의 context
+                  },
+                  child: const Text('확인'),
+                ),
+              ],
+            ),
+      );
+      return;
+    }
+
+    print(_titleController.text);
+    print(_amountController.text);
+    print(_pickedDate);
+    print(_selectedCategory);
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -119,11 +155,7 @@ class _NewExpenseState extends State<NewExpense> {
                 child: const Text('취소'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  print(_titleController.text);
-                  print(_amountController.text as int);
-                  print(_pickedDate);
-                },
+                onPressed: _summitExpenseDate,
                 child: const Text('저장'),
               ),
             ],
