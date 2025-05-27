@@ -31,13 +31,47 @@ class _ExpensesState extends State<Expenses> {
   }
 
   void _removeExpense(Expense expense) {
+    final expenseIndex = _registeredExpenses.indexOf(expense);
+
     setState(() {
       _registeredExpenses.remove(expense);
     });
+
+    //
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(milliseconds: 2000),
+        content: Text('지출내역 : ${expense.title} 삭제'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              //_registeredExpenses.add(expense);
+              _registeredExpenses.insert(expenseIndex, expense);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // 메인컨텐츠 영역 동적으로 할당
+    Widget? mainContent;
+
+    // 지출 내역 등록 여부에 따라 분기 처리
+    if (_registeredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registeredExpenses,
+        removeExpense: _removeExpense,
+      );
+    } else {
+      mainContent = const Center(
+        child: Text('No expenses found. Start adding some!'),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter Expense Tracker'),
@@ -51,15 +85,7 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: SafeArea(
         child: Column(
-          children: <Widget>[
-            Text('The Charts'),
-            Expanded(
-              child: ExpensesList(
-                expenses: _registeredExpenses,
-                removeExpense: _removeExpense,
-              ),
-            ),
-          ],
+          children: <Widget>[Text('The Charts'), Expanded(child: mainContent!)],
         ),
       ),
     );

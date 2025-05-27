@@ -12,8 +12,9 @@ class ExpensesItem extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(expense.title),
+            Text(expense.title, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 4),
             Row(
               children: <Widget>[
@@ -24,10 +25,10 @@ class ExpensesItem extends StatelessWidget {
                 Row(
                   children: [
                     Icon(categoryIcons[expense.category]),
-                    const SizedBox(width: 8,),
-                    Text(expense.formattedDate)
+                    const SizedBox(width: 8),
+                    Text(expense.formattedDate),
                   ],
-                )
+                ),
               ],
             ),
           ],
