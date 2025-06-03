@@ -19,6 +19,7 @@ class _ExpensesState extends State<Expenses> {
   void _openAddExpenseOverlay() {
     // State 상속받으면 context를 사용할 수 있다.
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (ctx) => NewExpense(addExpenseData: _addExpense),
@@ -58,6 +59,8 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width; // 실행되고 있는 화면의 width 값을 반환
+
     // 메인컨텐츠 영역 동적으로 할당
     Widget? mainContent;
 
@@ -85,12 +88,20 @@ class _ExpensesState extends State<Expenses> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Chart(expenses: _registeredExpenses),
-            Expanded(child: mainContent),
-          ],
-        ),
+        child:
+            (width < 600)
+                ? Column(
+                  children: <Widget>[
+                    Chart(expenses: _registeredExpenses),
+                    Expanded(child: mainContent),
+                  ],
+                )
+                : Row(
+                  children: [
+                    Expanded(child: Chart(expenses: _registeredExpenses)),
+                    Expanded(child: mainContent),
+                  ],
+                ),
       ),
     );
   }
